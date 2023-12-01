@@ -1,0 +1,5 @@
+# default build to support PHP 8.1 - Bitrix v2023
+bash build.sh 
+
+# build with PHP 7.2 - Bitrix v2020
+bash build.sh 7.2

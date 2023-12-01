@@ -1,0 +1,49 @@
+version: "3"
+
+services:
+  httpd:
+    container_name: dev-bitrix-httpd
+    image: bitrix/dev:7.2
+    restart: always
+    ports:
+      - '28080:80'
+    volumes:
+      - ${PWD}:/home/bitrix/www:rw
+      - ./php.ini:/usr/local/etc/php/conf.d/00-php.ini
+    privileged: true
+    networks:
+      - dev-bitrix 
+
+  memcached:
+    container_name: dev-bitrix-memcached
+    image: memcached
+    platform: linux/arm64
+    restart: always
+    ports:
+      - '21211:11211'
+    privileged: true
+    networks:
+      - dev-bitrix 
+
+  mailhog:
+    container_name: dev-bitrix-mailhog  
+    image: mailhog/mailhog
+    platform: linux/amd64
+    restart: always
+    ports:
+      - '28025:8025'
+      - '21025:1025'
+    networks:
+      - dev-bitrix
+      
+  adminer:
+    container_name: dev-bitrix-adminer
+    image: adminer
+    restart: always
+    ports:
+      - 28088:8080
+    networks:
+      - dev-bitrix      
+networks:
+  dev-bitrix:
+    driver: bridge
