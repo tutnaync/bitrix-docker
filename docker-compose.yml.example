@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+  intranet:
+    image: bitrix/dev:8.1
+    restart: always
+    ports:
+      - '8080:80'
+    volumes:
+      - ${PWD}/intranet:/home/bitrix/www:rw
+      - ./php.ini:/usr/local/etc/php/conf.d/00-php.ini
+    privileged: true
+    networks:
+      - dev-bitrix   
+
+  crm:
+    image: bitrix/dev:8.1
+    restart: always
+    ports:
+      - '8085:80'
+    volumes:
+      - ${PWD}/crm:/home/bitrix/www:rw
+      - ./php.ini:/usr/local/etc/php/conf.d/00-php.ini
+    privileged: true
+    networks:
+      - dev-bitrix 
+
+  mysql:
+    image: mysql:8.0.39
+    restart: always
+    environment:
+      MYSQL_USER: "intranet"
+      MYSQL_PASSWORD: "123456"
+      MYSQL_ROOT_PASSWORD: "123456"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+    networks:
+      - dev-bitrix 
+
+  memcached:
+    container_name: dev-bitrix-memcached
+    image: memcached
+    platform: linux/arm64
+    restart: always
+    privileged: true
+    networks:
+      - dev-bitrix 
+
+  mailhog:
+    container_name: dev-bitrix-mailhog  
+    image: mailhog/mailhog
+    platform: linux/amd64
+    restart: always
+    ports:
+      - '38025:8025'
+      - '31025:1025'
+    networks:
+      - dev-bitrix
+      
+  adminer:
+    container_name: dev-bitrix-adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8088:8080
+    networks:
+      - dev-bitrix      
+networks:
+  dev-bitrix:
+    driver: bridge

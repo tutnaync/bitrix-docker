@@ -26,7 +26,7 @@ RUN apt-get install -y memcached
 
 # RUN pecl install redis
 RUN pecl install memcache memcached
-RUN pecl install -f libsodium
+# RUN pecl install -f libsodium
 RUN pecl install pcov
 
 RUN cd /usr/local/etc/php/conf.d/ && echo "extension=memcache.so" > 02-memcache.ini
